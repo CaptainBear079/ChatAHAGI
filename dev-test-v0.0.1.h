@@ -1,5 +1,5 @@
-#include "./../../EntityManager/EntityManager.h"
-#include "./../../plugin.h"
+#include "EntityManager/EntityManager.h"
+#include "plugin.h"
 #include <stdlib.h>
 #include <math.h>
 
