@@ -1,6 +1,34 @@
 #include "dev-test-v0.0.1.h"
 
 int CPlugin_main(PluginInterface* interface) {
+	// Security check
+	if(interface == NULL) {
+		fprintf(
+			stderr,
+			"[%s V%d.%d.%d] FATAL ERROR: interface is NULL.\n    Exit code: %d\n",
+			CPLUGIN__NAME, CPLUGIN__MAJOR_V, CPLUGIN__MINOR_V, CPLUGIN__PATCH, EXIT_CODE__INTERFACE_NULL
+		);
+		return EXIT_CODE__INTERFACE_NULL; // interface is NULL
+	}
+	if(interface->exitFlag == NULL) {
+		fprintf(
+			stderr,
+			"[%s V%d.%d.%d] FATAL ERROR: interface->exitFlag is NULL.\n    Exit code: %d\n",
+			CPLUGIN__NAME, CPLUGIN__MAJOR_V, CPLUGIN__MINOR_V, CPLUGIN__PATCH, EXIT_CODE__EXITFLAG_NULL
+		);
+		return EXIT_CODE__EXITFLAG_NULL; // interface->exitFlag is NULL
+	}
+	if(interface->entity == NULL) {
+		fprintf(
+			stderr,
+			"[%s V%d.%d.%d] FATAL ERROR: interface->entity is NULL.\n    Exit code: %d\n",
+			CPLUGIN__NAME, CPLUGIN__MAJOR_V, CPLUGIN__MINOR_V, CPLUGIN__PATCH, EXIT_CODE__ENTITY_NULL
+		);
+		return EXIT_CODE__ENTITY_NULL; // interface->entity is NULL
+	}
+}
+
+int CPlugin_main(PluginInterface* interface) {
 	// Process neuron
 	// - Fetch input from the Entity
 	// - Update neurons

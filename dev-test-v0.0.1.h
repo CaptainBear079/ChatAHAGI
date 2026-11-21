@@ -3,6 +3,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define CPLUGIN__NAME "dev-test"
+#define CPLUGIN__MAJOR_V 0
+#define CPLUGIN__MINOR_V 1
+#define CPLUGIN__PATCH 0
+
+#define EXIT_CODE__INTERFACE_NULL -1
+#define EXIT_CODE__EXITFLAG_NULL -2
+#define EXIT_CODE__ENTITY_NULL -3
+
 #define NEURAL_NETWORK ((NeuralNetwork*)((EM_Entity*)interface->entity)->data)
 #define INPUT ((Input*)((EM_Entity*)interface->entity)->input)
 #define INPUT_COUNT ((int)((EM_Entity*)interface->entity)->inputCount)
