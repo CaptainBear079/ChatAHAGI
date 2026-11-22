@@ -1,5 +1,6 @@
-#include "../Entity.h"
-#include "../../plugin.h"
+#include "../../../Entity.h"
+#include "../../../plugin.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
