@@ -12,6 +12,8 @@
 #define EXIT_CODE__INTERFACE_NULL -1
 #define EXIT_CODE__EXITFLAG_NULL -2
 #define EXIT_CODE__ENTITY_NULL -3
+#define EXIT_CODE__NEURONCOUNT_ZERO -4
+#define EXIT_CODE__NEURONS_NULL -5
 
 #define NEURAL_NETWORK ((NeuralNetwork*)((EM_Entity*)interface->entity)->data)
 #define INPUT ((Input*)((EM_Entity*)interface->entity)->input)
@@ -30,16 +32,17 @@ typedef struct _Output_ {
 } Output;
 
 typedef struct _Neuron_ {
-    double input;       // Input current
-    void* output;       // Neuron for output
-    double tau;         // Leak intensity
-    double V;           // Membrane potential
-    double V_threshold; // Membrane threshold
-    double V_rest;      // Membrane resting potential
-    double V_reset;     // Membrane reset potential
-    clock_t now, then;  // Delta time variables
-    double restTime;    // Reset time
-    bool resetFlag;     // Reset flag
+    double input;             // Input current
+    void* output;             // Neuron for output
+    double tau;               // Leak intensity
+    double V;                 // Membrane potential
+    double V_threshold;       // Membrane threshold
+    double V_rest;            // Membrane resting potential
+    double V_reset;           // Membrane reset potential
+    clock_t now, then;        // Delta time variables
+    double shutdownDeltaTime; // Delta time from before the shutdown
+    double restTime;          // Reset time
+    bool resetFlag;           // Reset flag
 } Neuron;
 
 typedef struct _NeuralNetwork_ {
