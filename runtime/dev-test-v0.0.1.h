@@ -33,7 +33,9 @@ typedef struct _Output_ {
 
 typedef struct _Neuron_ {
     double input;             // Input current
-    void* output;             // Neuron for output
+    void** output;            // Neuron pointer array for outputs
+    double* synapticStrength; // Strength of the connections
+    double outputCount;       // Number of outputs (integers only)
     double tau;               // Leak intensity
     double V;                 // Membrane potential
     double V_threshold;       // Membrane threshold

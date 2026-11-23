@@ -63,8 +63,37 @@ int CPlugin_main(PluginInterface* interface) {
 		}
 
 		// - Update neuron
+		for(int n = 0; n < NEURAL_NETWORK->neuronCount; n++) {
+			// Get deltaTime
+			NEURAL_NETWORK->neurons[n].now = clock();
+			deltaTime = (double)(NEURAL_NETWORK->neurons[n].now - NEURAL_NETWORK->neurons[n].then) / (double)CLOCKS_PER_SEC;
 
-		// - Update output
+			// Update .resetFlag
+			if(deltaTime >= NEURAL_NETWORK->neurons[n].restTime) {
+				NEURAL_NETWORK->neurons[n].resetFlag = false;
+			}
+
+			// Check if the neuron is resting
+			if(NEURAL_NETWORK->neurons[n].resetFlag) {
+				continue;
+			}
+			else {
+				// Calculate membrane potrntial
+				NEURAL_NETWORK->neurons[n].V += (deltaTime / NEURAL_NETWORK->neurons[n].tau) * (-(NEURAL_NETWORK->neurons[n].V - NEURAL_NETWORK->neurons[n].V_rest) + NEURAL_NETWORK->neurons[n].input);
+				NEURAL_NETWORK->neurons[n].input = 0.0;
+
+				if(NEURAL_NETWORK->neurons[n].V > NEURAL_NETWORK->neurons[n].V_threshold) {
+					NEURAL_NETWORK->neurons[n].V = NEURAL_NETWORK->neurons[n].V_reset;
+					double temp = NEURAL_NETWORK->neurons[n].V / NEURAL_NETWORK->neurons[n].outputCount;
+					for(int o = 0; o <= (int)NEURAL_NETWORK->neurons[n].outputCount; o++) {
+						((Neuron*)((Neuron**)NEURAL_NETWORK->neurons[n].output)[o])->input += (temp / NEURAL_NETWORK->neurons[n].synapticStrength[o]);
+					}
+				}
+				NEURAL_NETWORK->neurons[n].then = NEURAL_NETWORK->neurons[n].now;
+			}
+		}
+
+		// - Update output INDEV
 		for(int o = 0; o < OUTPUT_COUNT; o++) {
 			OUTPUT[o].output += ((Neuron*)OUTPUT[o].source)->V;
 		}
@@ -72,29 +101,4 @@ int CPlugin_main(PluginInterface* interface) {
 
 	// Return normally
 	return 0;
-}
-
-int CPlugin_main(PluginInterface* interface) {
-	// Process neuron
-	// - Fetch input from the Entity
-	// - Update neurons
-	for(int n = 0; n < NEURAL_NETWORK->neuronCount; n++) {
-		NEURAL_NETWORK->neurons[n].now = clock();
-		deltaTime = (double)(NEURAL_NETWORK->neurons[n].now - NEURAL_NETWORK->neurons[n].then) / (double)CLOCKS_PER_SEC;
-		UpdateNeuron:
-		if(!(NEURAL_NETWORK->neurons[n].resetFlag)) {
-			NEURAL_NETWORK->neurons[n].V += (deltaTime / NEURAL_NETWORK->neurons[n].tau) * (-(NEURAL_NETWORK->neurons[n].V - NEURAL_NETWORK->neurons[n].V_rest) + NEURAL_NETWORK->neurons[n].input);
-			if(NEURAL_NETWORK->neurons[n].V >= NEURAL_NETWORK->neurons[n].V_threshold) {
-				NEURAL_NETWORK->neurons[n].V = NEURAL_NETWORK->neurons[n].V_reset;
-				((Neuron*)NEURAL_NETWORK->neurons[n].output)->input += 1.0;
-			}
-			NEURAL_NETWORK->neurons[n].then = NEURAL_NETWORK->neurons[n].now;
-		}
-		else {
-			if(deltaTime >= NEURAL_NETWORK->neurons[n].restTime) {
-				NEURAL_NETWORK->neurons[n].resetFlag = false;
-				goto UpdateNeuron;
-			}
-		}
-	}
 }
